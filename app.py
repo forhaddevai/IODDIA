@@ -13,9 +13,12 @@ Run with:
     streamlit run app.py
 """
 
+import os
+
 import joblib
 import numpy as np
 import pandas as pd
+import requests
 import streamlit as st
 
 # ------------------------------------------------------------------
@@ -133,23 +136,43 @@ st.markdown(
 )
 
 # ------------------------------------------------------------------
-# Load model + selected features (cached so it only loads once)
+# Load the single trained model — download it from remote storage if
+# it isn't already sitting next to this script.
+#
+# The selected feature list is hardcoded below since we're shipping only
+# one model file. Update FEATURE_ORDER to match the exact columns (and
+# order) the model was trained on in the notebook (`best_features`).
 # ------------------------------------------------------------------
+MODEL_PATH = "diabetes_linear_regression_model.pkl"
+MODEL_URL = "https://your-storage-service.com/diabetes_linear_regression_model.pkl"
+
+# IMPORTANT: replace this with the actual `best_features` list printed by
+# the notebook (Section 10, "Choose the Best Columns") — order matters.
+FEATURE_ORDER = [
+    "glucose", "bmi", "age", "gender",
+    "physical_activity", "family_history", "stress_level", "insulin",
+]
+
+
 @st.cache_resource
-def load_model_and_features():
-    model = joblib.load("diabetes_linear_regression_model.pkl")
-    features = joblib.load("diabetes_model_selected_features.pkl")
-    return model, features
+def load_model():
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Downloading model..."):
+            response = requests.get(MODEL_URL)
+            response.raise_for_status()
+            with open(MODEL_PATH, "wb") as f:
+                f.write(response.content)
+    return joblib.load(MODEL_PATH)
 
 
 try:
-    model, best_features = load_model_and_features()
-except FileNotFoundError:
+    model = load_model()
+    best_features = FEATURE_ORDER
+except Exception as e:
     st.error(
-        "Could not find 'diabetes_linear_regression_model.pkl' or "
-        "'diabetes_model_selected_features.pkl'. Make sure both files "
-        "are in the same folder as this app (export them from the "
-        "notebook's 'Save the Models' step)."
+        f"Could not load the model from '{MODEL_URL}'. "
+        f"Make sure MODEL_URL points to a valid, publicly reachable file. "
+        f"Error: {e}"
     )
     st.stop()
 
