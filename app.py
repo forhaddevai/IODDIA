@@ -143,8 +143,8 @@ st.markdown(
 # one model file. Update FEATURE_ORDER to match the exact columns (and
 # order) the model was trained on in the notebook (`best_features`).
 # ------------------------------------------------------------------
-MODEL_PATH = "diabetes_linear_regression_model.pkl"
-MODEL_URL = "https://your-storage-service.com/diabetes_linear_regression_model.pkl"
+#MODEL_PATH = "diabetes_linear_regression_model.pkl"
+#MODEL_URL = "https://your-storage-service.com/diabetes_linear_regression_model.pkl"
 
 # IMPORTANT: replace this with the actual `best_features` list printed by
 # the notebook (Section 10, "Choose the Best Columns") — order matters.
@@ -155,19 +155,17 @@ FEATURE_ORDER = [
 
 
 @st.cache_resource
-def load_model():
-    if not os.path.exists(MODEL_PATH):
-        with st.spinner("Downloading model..."):
-            response = requests.get(MODEL_URL)
-            response.raise_for_status()
-            with open(MODEL_PATH, "wb") as f:
-                f.write(response.content)
-    return joblib.load(MODEL_PATH)
 
+@st.cache_resource
+def load_model():
+    bundle = joblib.load("diabetes_linear_regression_model.joblib")
+    return bundle["model"], bundle["feature_names"]
+
+model, feature_names = load_model()
 
 try:
     model = load_model()
-    best_features = FEATURE_ORDER
+    best_features = feature_names
 except Exception as e:
     st.error(
         f"Could not load the model from '{MODEL_URL}'. "
