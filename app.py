@@ -9,7 +9,6 @@ import streamlit as st
 MODEL_PATH = "house_price_linear_regression.joblib"
 
 # Feature order the model was trained on. Must match the notebook exactly.
-FEATURES = ["area_sqft", "bedrooms", "bathrooms"]
 
 st.set_page_config(
     page_title="House Price Predictor",
@@ -30,8 +29,7 @@ def load_model():
 
 
 def predict(model, row: dict) -> float:
-    """Build a single-row DataFrame in the right column order and predict."""
-    df = pd.DataFrame([row])[FEATURES]
+    df = pd.DataFrame([row])
     pred = model.predict(df)[0]
     return float(pred)
 
