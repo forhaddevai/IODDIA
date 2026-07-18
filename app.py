@@ -57,22 +57,24 @@ if model is None:
 st.subheader("Enter house details")
 
 with st.form("single_prediction_form"):
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns(3)
 
     with col1:
         area_sqft = st.number_input(
             "Area (sqft)", min_value=100.0, max_value=20000.0,
             value=1800.0, step=50.0,
-        ),
-        bathrooms = st.slider(
-            "Bathrooms", min_value=1, max_value=10, value=3, step=1,
-        )
+        )      
 
     with col2:        
         bedrooms = st.slider(
             "Bedrooms", min_value=0, max_value=10, value=3, step=1,
         )
-
+    
+    with col2:        
+        bathrooms = st.slider(
+            "Bathrooms", min_value=1, max_value=10, value=3, step=1,
+        )
+    
     submitted = st.form_submit_button("Predict Price", type="primary")
 
 if submitted:
