@@ -9,7 +9,7 @@ import streamlit as st
 MODEL_PATH = "house_price_linear_regression.joblib"
 
 # Feature order the model was trained on. Must match the notebook exactly.
-FEATURES = ["area_sqft", "bedrooms"]
+FEATURES = ["area_sqft", "bedrooms", "bathrooms"]
 
 st.set_page_config(
     page_title="House Price Predictor",
