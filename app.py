@@ -63,6 +63,9 @@ with st.form("single_prediction_form"):
         area_sqft = st.number_input(
             "Area (sqft)", min_value=100.0, max_value=20000.0,
             value=1800.0, step=50.0,
+        );
+        bathrooms = st.slider(
+            "Bathrooms", min_value=0, max_value=10, value=3, step=1,
         )
 
     with col2:
