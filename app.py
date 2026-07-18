@@ -57,7 +57,7 @@ if model is None:
 st.subheader("Enter house details")
 
 with st.form("single_prediction_form"):
-    col1, col2 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         area_sqft = st.number_input(
@@ -70,7 +70,7 @@ with st.form("single_prediction_form"):
             "Bedrooms", min_value=0, max_value=10, value=3, step=1,
         )
     
-    with col2:        
+    with col3:        
         bathrooms = st.slider(
             "Bathrooms", min_value=1, max_value=10, value=3, step=1,
         )
