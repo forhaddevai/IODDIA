@@ -77,7 +77,7 @@ with st.form("single_prediction_form"):
 
 if submitted:
     try:
-        input_values = {"area_sqft": area_sqft, "bedrooms": bedrooms}
+        input_values = {"area_sqft": area_sqft, "bedrooms": bedrooms,"bathrooms": bathrooms }
         price = predict(model, input_values)
         st.success(f"### Estimated Price: ${price:,.2f}")
     except Exception as e:
